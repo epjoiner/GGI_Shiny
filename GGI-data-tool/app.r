@@ -40,15 +40,14 @@ server <- function(input, output) {
   # 2. Its output type is a plot
   output$distPlot <- renderPlot({
 
-    x    <- faithful$waiting/60
-    bins <- seq(min(x), max(x), length.out = input$bins + 1)
+    x <- input$proc_supp
+    y <- input$carbon_frac
 
-    hist(x, breaks = bins, col = "#007bc2", border = "white",
-         xlab = "Waiting time to next eruption (in hours)",
-         main = "Histogram of waiting times")
+    
 
-    })
+    plot(x, y)
 
+  })
 }
 
 shinyApp(ui = ui, server = server)
