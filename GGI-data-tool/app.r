@@ -1,22 +1,30 @@
 library(shiny)
 library(bslib)
+library(tidyverse)
 
 # Define UI for app that draws a histogram ----
 ui <- page_sidebar(
   # App title ----
-  title = "Hello Shiny!",
+  title = "Produced Oil",
   # Sidebar panel for inputs ----
   sidebar = sidebar(
     # Input: Slider for the number of bins ----
     sliderInput(
-      inputId = "bins",
-      label = "Number of bins:",
-      min = 5,
-      max = 50,
-      value = 30
+      inputId = "proc_supp",
+      label = "Process & Supply Chain Emission Intensity\n(tons CO2e per ton crude)",
+      min = 0,
+      max = 0.5,
+      value = 0.126
+    ),
+    sliderInput(
+      inputId = "carbon_frac",
+      label = "Carbon Content\n(tons CO2e per ton crude)",
+      min = 0,
+      max = 1,
+      value = 0.85
     )
   ),
-  # Output: Histogram ----
+  # Output: Bar chart ----
   plotOutput(outputId = "distPlot")
 )
 
