@@ -9,8 +9,6 @@ coal_ggi <- data.frame(Rank = c("Bituminous", "Sub-bituminous",
             mutate(Carbon_Cont = Carbon_Frac * (44/12))
                         
 
-
-
 # Define UI
 ui <- fluidPage(
 # App title ----
@@ -56,7 +54,7 @@ server <- function(input, output) {
 
   output$distPlot <- renderPlot({
 
-    coal_ggi <- coal_ggi %>% mutate(SC_OPs = c(input$sco_b, input$sco_sb, input$sbo_l, input$sbo_a)) %>%
+    coal_ggi <- coal_ggi %>% mutate(SC_OPs = c(input$sco_b, input$sco_sb, input$sco_l, input$sco_a)) %>%
                             gather(., Source, Amount, Carbon_Cont:SC_OPs, factor_key = T)
 
     ggplot(data = coal_ggi, aes(x = Rank, y = Amount, fill = Source)) +  
