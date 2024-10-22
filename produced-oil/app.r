@@ -2,26 +2,35 @@ library(shiny)
 library(bslib)
 library(tidyverse)
 
-# Define UI for app that draws a histogram ----
+# Define UI for app ----
 ui <- page_sidebar(
   # App title ----
   title = "Produced Oil",
   # Sidebar panel for inputs ----
   sidebar = sidebar(
-    # Input: Slider for the number of bins ----
     sliderInput(
-      inputId = "proc_supp",
-      label = "Process & Supply Chain Emission Intensity\n(tons CO2e per ton crude)",
-      min = 0,
-      max = 0.5,
-      value = 0.126
-    ),
-    sliderInput(
-      inputId = "carbon_frac",
-      label = "Carbon Content\n(tons CO2e per ton crude)",
+      inputId = "carbon_frac_conv",
+      label = "Conventional Oil Carbon Fraction",
       min = 0,
       max = 1,
       value = 0.85
+    ),
+    sliderInput(
+      inputId = "carbon_frac_sand",
+      label = "Canadian Oil Sands Carbon Fraction",
+      min = 0,
+      max = 1,
+      value = 0.85
+    ),
+    selectInput(
+      inputId = "proc_supp_conv",
+      label = "Conventional Oil Process & Supply Chain Contribution",
+      choices = list("3%" = .03, "5%" = .05, "8%" = .08)
+    ),
+    selectInput(
+      inputId = "proc_supp_sand",
+      label = "Canadian Oil Sands Process & Supply Chain Contribution",
+      choices = list("10%" = .10, "15%" = .15, "20%" = .20)
     )
   ),
   # Output: Bar chart ----
@@ -30,22 +39,41 @@ ui <- page_sidebar(
 
 server <- function(input, output) {
 
-  # Histogram of the Old Faithful Geyser Data ----
-  # with requested number of bins
-  # This expression that generates a histogram is wrapped in a call
+  CO2_per_C <- 44/12
+
+  # This expression that generates a column chart is wrapped in a call
   # to renderPlot to indicate that:
   #
   # 1. It is "reactive" and therefore should be automatically
-  #    re-executed when inputs (input$bins) change
+  #    re-executed when inputs change
   # 2. Its output type is a plot
+
   output$barPlot <- renderPlot({
 
-    x <- input$proc_supp
-    y <- input$carbon_frac
+    conv_cc <- CO2_per_C * input$carbon_frac_conv
+    sand_cc <- CO2_per_C * input$carbon_frac_sand
+    conv_ps <- conv_cc * as.numeric(input$proc_supp_conv)
+    sand_ps <- sand_cc * as.numeric(input$proc_supp_sand)
 
-    plot(x, y)
+    y <- c(conv_ps, sand_ps, conv_cc, sand_cc)
+    x <- c("Conv", "Sand", "Conv", "Sand")
+    categories <- c("Process & Supply Chain", "Carbon Content")
+    col <- factor(
+      rep(categories, each = 2),
+      levels = categories
+    )
+
+    plot_data <- tibble(y, x, col)
+
+    plot_data %>%
+      ggplot(aes(x = x, y = y, fill = col)) +
+      geom_col(position = "stack") +
+      scale_y_continuous(limits = c(0,4.5)) +
+      theme(legend.position = "bottom") +
+      labs(fill = "")
 
   })
+
 }
 
 shinyApp(ui = ui, server = server)
