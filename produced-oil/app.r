@@ -1,6 +1,6 @@
 library(shiny)
 library(bslib)
-library(tidyverse)
+library(ggplot2)
 
 # Define UI for app ----
 ui <- page_sidebar(
@@ -63,10 +63,9 @@ server <- function(input, output) {
       levels = categories
     )
 
-    plot_data <- tibble(y, x, col)
+    plot_data <- data.frame(y, x, col)
 
-    plot_data %>%
-      ggplot(aes(x = x, y = y, fill = col)) +
+    ggplot(aes(x = x, y = y, fill = col), data = plot_data) +
       geom_col(position = "stack") +
       scale_y_continuous(limits = c(0,4.5)) +
       theme(legend.position = "bottom") +
