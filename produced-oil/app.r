@@ -25,7 +25,7 @@ ui <- page_sidebar(
     )
   ),
   # Output: Bar chart ----
-  plotOutput(outputId = "distPlot")
+  plotOutput(outputId = "barPlot")
 )
 
 server <- function(input, output) {
@@ -38,12 +38,10 @@ server <- function(input, output) {
   # 1. It is "reactive" and therefore should be automatically
   #    re-executed when inputs (input$bins) change
   # 2. Its output type is a plot
-  output$distPlot <- renderPlot({
+  output$barPlot <- renderPlot({
 
     x <- input$proc_supp
     y <- input$carbon_frac
-
-    
 
     plot(x, y)
 
