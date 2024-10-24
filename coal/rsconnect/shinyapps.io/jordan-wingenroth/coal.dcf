@@ -1,10 +1,10 @@
-name: produced-oil
+name: coal
 title:
 username: jordan-wingenroth
 account: jordan-wingenroth
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
-appId: 13100035
-bundleId: 9266140
-url: https://jordan-wingenroth.shinyapps.io/produced-oil/
+appId: 13125676
+bundleId: 9266146
+url: https://jordan-wingenroth.shinyapps.io/coal/
 version: 1
