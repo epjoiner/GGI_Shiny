@@ -39,7 +39,7 @@ ui <- page_sidebar(
 
 server <- function(input, output) {
 
-  CO2_per_C <- 44/12
+  co2_per_c <- 44 / 12
 
   # This expression that generates a column chart is wrapped in a call
   # to renderPlot to indicate that:
@@ -50,8 +50,8 @@ server <- function(input, output) {
 
   output$barPlot <- renderPlot({
 
-    conv_cc <- CO2_per_C * input$carbon_frac_conv
-    sand_cc <- CO2_per_C * input$carbon_frac_sand
+    conv_cc <- co2_per_c * input$carbon_frac_conv
+    sand_cc <- co2_per_c * input$carbon_frac_sand
     conv_ps <- conv_cc * as.numeric(input$proc_supp_conv)
     sand_ps <- sand_cc * as.numeric(input$proc_supp_sand)
 
@@ -67,7 +67,7 @@ server <- function(input, output) {
 
     ggplot(aes(x = x, y = y, fill = col), data = plot_data) +
       geom_col(position = "stack") +
-      scale_y_continuous(limits = c(0,4.5)) +
+      scale_y_continuous(limits = c(0, 4.5)) +
       theme(legend.position = "bottom") +
       labs(fill = "")
 
