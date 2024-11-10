@@ -1,4 +1,5 @@
 library(shiny)
 
-runApp("produced-oil")
 #runApp("coal")
+#runApp("produced-oil")
+runApp("2nd-aluminum")
