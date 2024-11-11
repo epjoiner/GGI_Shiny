@@ -1,4 +1,4 @@
 library(rsconnect)
 
-deployApp("produced-oil")
-deployApp("coal")
+# deployApp("old/produced-oil")
+# deployApp("old/coal")
