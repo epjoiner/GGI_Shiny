@@ -13,17 +13,27 @@ data <- read_ggi_data("data")
 
 ui <- fluidPage(
     
-    titlePanel("test"),
+    titlePanel(p(
+        h1("Aluminum Supply Chain"),
+        h2("Greenhouse Gas Intensity"),
+    )),
 
     mainPanel(
-        verbatimTextOutput("tibble")
+        plotOutput("columns",)
     )
 
 )
 
 server <- function(input, output) {
 
-    output$tibble <- renderPrint(data)
+    values <- c(
+        electrolysis(data),
+        anode(data),
+        alumina(data),
+        aluminum(data)
+    )
+
+    output$columns <- renderPlot(plot(values))
 
 }
 
