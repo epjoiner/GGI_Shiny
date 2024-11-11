@@ -2,7 +2,7 @@ library(shiny)
 
 # Source library functions
 
-sapply(list.files("lib", full.names = TRUE), source)
+invisible(lapply(list.files("lib", full.names = TRUE), source))
 
 # Write secondary aluminum data to directory
 
