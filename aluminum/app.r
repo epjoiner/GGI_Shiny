@@ -14,6 +14,7 @@ ui <- page_fillable(
 
         sidebar = sidebar(
             sliderInput("electrolysis_elec_in", "Electrolysis: MWh per tonne Al", min = 0, max = 20, value = 16, step = 0.1),
+            sliderInput("anode_raw_mat_ggi", "Anode: raw materials, tonne CO2e per tonne anode", min = 0, max = 5, value = 3.44, step = 0.01),
         ),
         
         fillPage(plotlyOutput("waterfall", height = "90%"))
@@ -35,7 +36,8 @@ server <- function(input, output) {
 
         values <- aluminum(
             data, 
-            electrolysis_elec = input$electrolysis_elec_in
+            electrolysis_elec = input$electrolysis_elec_in,
+            anode_raw_materials_ggi = input$anode_raw_mat_ggi
         )
 
         ggi_table <- tibble(x = names(values), y = round(unlist(values),3)) %>%
@@ -51,11 +53,12 @@ server <- function(input, output) {
             x = ~x, textposition = "auto", y= ~y, text = ~as.character(y),
             connector = list(line = list(color= "rgb(63, 63, 63)"))
         ) %>%
-        layout(title = "",
-                xaxis = list(title = ""),
-                yaxis = list(title = "tonnes of CO2e per ton Al"),
-                autosize = TRUE,
-                showlegend = FALSE
+        layout(
+            title = "",
+            xaxis = list(title = ""),
+            yaxis = list(title = "tonnes of CO2e per tonne Al", range = c(0,max(20, max(ggi_table$y)))),
+            autosize = TRUE,
+            showlegend = FALSE
         )
     })
 
