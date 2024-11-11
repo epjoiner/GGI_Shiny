@@ -1,4 +1,4 @@
-### Read CSV files from data directory ###
+# Read CSV files from data directory
 
 read_ggi_data <- function(datadir) {
 

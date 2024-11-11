@@ -84,12 +84,20 @@ aluminum <- function(
         alumina * alumina_ggi
     )
 
-    aluminum_ggi <- c(
+    aluminum_ggi <- sum(
         primary_ggi * (1 - scrap_frac),
         secondary_ggi * scrap_frac
     )
 
-    return(sum(aluminum_ggi))
+    return(list(
+        electrolysis = electrolysis_ggi,
+        anode = anode * anode_ggi,
+        anode_pfcs = anode_effect_pfcs_ggi,
+        alumina = alumina * alumina_ggi,
+        primary = primary_ggi,
+        secondary = scrap_frac * secondary_ggi,
+        total = aluminum_ggi
+    ))
 
 }
 
