@@ -8,7 +8,7 @@ def addlabels(x,y):
 
 class Plot:
     def __init__(self, *args: Fuel):
-        self.fuels = args
+        self.fuels = list(args)
 
     def add_column(self, fuel: Fuel):
         self.fuels.append(fuel)
