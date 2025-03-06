@@ -43,8 +43,8 @@ class LNG(Product):
          super().__init__(name, processing)
          self.add_feedstock(NaturalGas, unit_ratio = 1/.9)
          
-lng = LNG(NaturalGas())
-print("GHG intensity (CO2e) of", lng.name, ":", round(lng.ggi_co2e(), 2))
+#lng = LNG(NaturalGas())
+#print("GHG intensity (CO2e) of", lng.name, ":", round(lng.ggi_co2e(), 2))
 
  
  # feedstocks as inputs for BOF steel 
@@ -81,6 +81,6 @@ class BOFSteel(Product):
         self.add_feedstock(Limestone, unit_ratio = 0.25)
         
         
-coke = Coke(Coal())
-bof_steel = BOFSteel(Iron(), coke, Oxygen(), Limestone(), processing = 0)
-print("GHG intensity (CO2e) of", bof_steel.name, ":", bof_steel.ggi_co2e())
+#coke = Coke(Coal())
+#bof_steel = BOFSteel(Iron(), coke, Oxygen(), Limestone(), processing = 0)
+#print("GHG intensity (CO2e) of", bof_steel.name, ":", bof_steel.ggi_co2e())
