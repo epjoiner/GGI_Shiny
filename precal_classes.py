@@ -4,9 +4,48 @@ from product_types import *
 
 # fuels 
 
+# Oil 
+
 class OilSands(Fuel):
     def __init__(self, name = "Canadian Oil Sands", carbon_frac = 0.85, processing = 0.312):
         self = Fuel.__init__(self, name, carbon_frac, processing)
+
+class ConventionalCrued(Fuel): 
+    def __init__(self, name = "Conventional Crude Oil", carbon_frac = 0.85, processing = 0.126):
+        self = Fuel.__init__(self, name, carbon_frac, processing)
+        
+# Coal 
+  
+class Bituminous(Fuel):
+    def __init__(self, name = "Bituminous Coal", carbon_frac = 0.7, processing = 0.117):
+        self = Fuel.__init__(self, name, carbon_frac, processing)
+        
+class SubBituminous(Fuel):
+    def __init__(self, name = "Sub-Bituminous Coal", carbon_frac = 0.5, processing = 0.02):
+        self = Fuel.__init__(self, name, carbon_frac, processing)
+ 
+class Lignite(Fuel):
+    def __init__(self, name = "Lignite", carbon_frac = 0.41, processing = 0.02):
+        self = Fuel.__init__(self, name, carbon_frac, processing)
+        
+class Anthracite(Fuel):
+    def __init__(self, name = "Anthracite", carbon_frac = 0.78, processing = 0.117):
+        self = Fuel.__init__(self, name, carbon_frac, processing)
+ 
+ # Natural Gas
+ 
+class NaturalGas(Fuel): 
+    def __init__(self, name = "Natural Gas", carbon_frac = 0.763, processing = 0.258):
+         self = Fuel.__init__(self, name, carbon_frac, processing)
+         
+class LNG(Product):
+    def __init__(self, NaturalGas: Fuel, name = "LNG", processing = 0):
+         super().__init__(name, processing)
+         self.add_feedstock(NaturalGas, unit_ratio = 1/.9)
+         
+lng = LNG(NaturalGas())
+print("GHG intensity (CO2e) of", lng.name, ":", round(lng.ggi_co2e(), 2))
+
  
  # feedstocks as inputs for BOF steel 
         
@@ -44,4 +83,4 @@ class BOFSteel(Product):
         
 coke = Coke(Coal())
 bof_steel = BOFSteel(Iron(), coke, Oxygen(), Limestone(), processing = 0)
-print(bof_steel.ggi_co2e())
+print("GHG intensity (CO2e) of", bof_steel.name, ":", bof_steel.ggi_co2e())
