@@ -1,3 +1,4 @@
+from treelib import Tree
 
 class Fuel:
     def __init__(self, name: str, carbon_frac: float, processing: float):
@@ -34,6 +35,37 @@ class Product:
             partial_ggi = feedstock["source"].ggi_co2e() * feedstock["ratio"]
             ggi += partial_ggi
         return ggi
+    
+    class IDGenerator:
+        def __init__(self):
+            self.counter = 0
+        
+        def generate(self):
+            self.counter += 1
+            return f"node_{self.counter}"
+
+    def catalog(self, idgen = IDGenerator()):
+    
+        tree = Tree()
+        node_id = idgen.generate()
+    
+        tree.create_node(f"{self}", identifier = node_id)
+    
+        for i in range(len(self.feedstocks)):
+    
+            child = self.feedstocks[i]
+    
+            if type(child['source']) is Fuel:
+                tree.create_node(
+                    f"{child['source']}, ratio = {child['ratio']}",
+                    identifier = idgen.generate(),
+                    parent = node_id
+                )
+    
+            if type(child['source']) is Product:
+                tree.paste(node_id, child['source'].catalog(idgen = idgen))
+    
+        return tree
 
     def __repr__(self):
         return f"Product('{self.name}')"
