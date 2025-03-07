@@ -10,7 +10,7 @@ class OilSands(Fuel):
     def __init__(self, name = "Canadian Oil Sands", carbon_frac = 0.85, processing = 0.312):
         self = Fuel.__init__(self, name, carbon_frac, processing)
 
-class ConventionalCrued(Fuel): 
+class ConventionalCrude(Fuel): 
     def __init__(self, name = "Conventional Crude Oil", carbon_frac = 0.85, processing = 0.126):
         self = Fuel.__init__(self, name, carbon_frac, processing)
         
