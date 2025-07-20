@@ -202,65 +202,38 @@ class ModProduct:
     def __str__(self):
         return f"'{self.name}' product, {len(self.feedstocks)} input(s), processing emissions = {self.processing}"
 
-def build_products_from_df(df, fuel_processing_default=0.0):
-    
-    #GTP iterated function 
-    """
-    builds ModFuel and ModProduct instances from a single long-format DataFrame.
-
-    arguments from df - 
-        df (pd.DataFrame): A dataframe with columns:
-            - parent product_name
-            - id
-            - processing
-            - feedstock_name
-            - feedstock_type ('Fuel' or 'Product')
-            - carbon_frac
-            - unit_ratio
-        fuel_processing_default (float): Default processing value for fuels (if not provided).
-
-    Returns:
-        dict: A dictionary of all products keyed by name.
-    """
+def build_products_from_df(df):
     fuel_dict = {}
     product_dict = {}
-    source_dict = {}
-
-    # Step 1: Build unique fuels
-    fuel_rows = df[df["feedstock_type"] == "Fuel"]
-    unique_fuels = fuel_rows[["feedstock_name", "carbon_frac"]].drop_duplicates()
-
-    for _, row in unique_fuels.iterrows():
-        name = row["feedstock_name"]
-        carbon_frac = row["carbon_frac"]
-        fuel_dict[name] = ModFuel(name, carbon_frac, fuel_processing_default)
     
-    source_dict.update(fuel_dict)  # Initial lookup table
+    # Step 1: Create all fuels
+    for _, row in df[df['feedstock_type'] == 'Fuel'].iterrows():
+        name = row['feedstock_name']
+        if name not in fuel_dict:
+            fuel_dict[name] = ModFuel(name, row['carbon_frac'], processing=0.0)
 
-    # Step 2: Build products
-    for product_name, group in df.groupby("product_name"):
-        processing = group["processing"].iloc[0]
+    # Step 2: Create all products
+    for product_name in df['product_name'].unique():
+        product_rows = df[df['product_name'] == product_name]
+        processing = product_rows.iloc[0]['processing']
         product = ModProduct(product_name, processing)
-
-        for _, row in group.iterrows():
-            source_name = row["feedstock_name"]
-            source_type = row["feedstock_type"]
-            carbon_frac = row["carbon_frac"]
-            unit_ratio = row["unit_ratio"]
-
-            if source_type == "Fuel":
-                source = fuel_dict.get(source_name)
-            elif source_type == "Product":
-                source = product_dict.get(source_name)
-                if source is None:
-                    raise ValueError(f"Product dependency '{source_name}' not yet created. "
-                                     "Ensure input data is in dependency order.")
-            else:
-                raise ValueError(f"Unknown feedstock_type: {source_type}")
-
-            product.add_feedstock(source, carbon_frac, unit_ratio)
-
         product_dict[product_name] = product
-        source_dict[product_name] = product
+
+    # Step 3: Add feedstocks to each product
+    for product_name, product in product_dict.items():
+        product_rows = df[df['product_name'] == product_name]
+        for _, row in product_rows.iterrows():
+            feedstock_name = row['feedstock_name']
+            unit_ratio = row['unit_ratio']
+            feedstock_type = row['feedstock_type']
+
+            if feedstock_type == 'Fuel':
+                source = fuel_dict[feedstock_name]
+            elif feedstock_type == 'Product':
+                source = product_dict[feedstock_name]
+            else:
+                raise ValueError(f"Unknown feedstock type: {feedstock_type}")
+
+            product.add_feedstock(source, unit_ratio)
 
     return product_dict
