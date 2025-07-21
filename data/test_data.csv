@@ -1,0 +1,4 @@
+﻿product_name,processing,feedstock_name,feedstock_type,carbon_frac,unit_ratio
+BOF Steel ,0.5,Iron Ore,Fuel,0.5,1.5
+BOF Steel ,0.5,Coke,Fuel,0.4,0.8
+Coke,0.4,Coal,Fuel,0.6,0.4
